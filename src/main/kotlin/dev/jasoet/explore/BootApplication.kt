@@ -5,16 +5,20 @@ import dev.jasoet.explore.model.Comment
 import dev.jasoet.explore.model.Post
 import dev.jasoet.explore.repository.AuthorRepository
 import dev.jasoet.explore.repository.PostRepository
+import kotlinx.coroutines.asCoroutineDispatcher
 import org.springframework.boot.CommandLineRunner
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.data.jdbc.core.mapping.AggregateReference
 import java.time.LocalDateTime
+import java.util.concurrent.Executors
 
 @SpringBootApplication
 class BootApplication {
+
+    @Bean
+    fun coroutineDispatcher() = Executors.newFixedThreadPool(10).asCoroutineDispatcher()
 
     @Bean
     fun commandLineRunner(
@@ -56,7 +60,7 @@ class BootApplication {
 
 fun main(args: Array<String>) {
     runApplication<BootApplication>(*args) {
-        webApplicationType = WebApplicationType.NONE
+//        webApplicationType = WebApplicationType.NONE
     }
 }
 
