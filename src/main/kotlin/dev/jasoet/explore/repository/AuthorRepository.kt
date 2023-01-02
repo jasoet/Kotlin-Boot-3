@@ -1,6 +1,6 @@
 package dev.jasoet.explore.repository
 
 import dev.jasoet.explore.model.Author
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-interface AuthorRepository : CrudRepository<Author, Int>
+interface AuthorRepository : CoroutineCrudRepository<Author, Int>

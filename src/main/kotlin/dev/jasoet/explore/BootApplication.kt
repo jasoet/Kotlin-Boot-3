@@ -5,7 +5,9 @@ import dev.jasoet.explore.model.Comment
 import dev.jasoet.explore.model.Post
 import dev.jasoet.explore.repository.AuthorRepository
 import dev.jasoet.explore.repository.PostRepository
+import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.runBlocking
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -22,37 +24,40 @@ class BootApplication {
 
     @Bean
     fun commandLineRunner(
+        coroutineDispatcher: ExecutorCoroutineDispatcher,
         authorRepository: AuthorRepository, postRepository: PostRepository
     ) = CommandLineRunner {
-        val author = authorRepository.save(
-            Author(
-                name = "Jasoet Martohartono", email = "jasoet87@gmail.com", username = "jasoet"
+        runBlocking {
+            val author = authorRepository.save(
+                Author(
+                    name = "Jasoet Martohartono", email = "jasoet87@gmail.com", username = "jasoet"
+                )
             )
-        )
-        val post = Post(
-            title = "Hello World",
-            content = "Hello World",
-            publishedAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now(),
-            author = AggregateReference.to(author.id ?: 0)
-        )
-
-        post.addComment(
-            Comment(
-                name = "Jst",
-                content = "Good Hello World",
+            val post = Post(
+                title = "Hello World",
+                content = "Hello World",
                 publishedAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now(),
-            ),
-            Comment(
-                name = "Jst",
-                content = "Another Hello World",
-                publishedAt = LocalDateTime.now(),
-                updatedAt = LocalDateTime.now(),
+                author = AggregateReference.to(author.id ?: 0)
             )
-        )
 
-        postRepository.save(post)
+            post.addComment(
+                Comment(
+                    name = "Jst",
+                    content = "Good Hello World",
+                    publishedAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                ),
+                Comment(
+                    name = "Jst",
+                    content = "Another Hello World",
+                    publishedAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                )
+            )
+
+            postRepository.save(post)
+        }
 
         println("Hello, World!")
     }
